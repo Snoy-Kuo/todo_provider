@@ -50,7 +50,7 @@ TODO App using Provider to manage state.
 ## Try
 
  - collect all label texts to a localized class.
- - show red background and 'Delete' text, while horizontal swiping or draging todo item.
+ - show red background and 'Delete' text, while horizontal swiping or dragging todo item.
  - modify HomeScreen to StatelessWidget with a Provider to manage tab state.
  - modify EditTodoScreen to StatelessWidget with a Provider to invalidate the form inputs.
  - add tests.
