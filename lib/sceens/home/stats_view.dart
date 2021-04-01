@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:todo_provider/common/todos_app_core/todos_app_core.dart';
+import 'package:todo_provider/l10n/l10n.dart';
 import 'package:todo_provider/models/models.dart';
 
 class StatsView extends StatelessWidget {
@@ -16,7 +17,7 @@ class StatsView extends StatelessWidget {
           Padding(
             padding: const EdgeInsets.only(bottom: 8.0),
             child: Text(
-              'Completed Todos',
+              l10n(context).completedTodos,
               style: Theme.of(context).textTheme.headline6,
             ),
           ),
@@ -34,7 +35,7 @@ class StatsView extends StatelessWidget {
           Padding(
             padding: const EdgeInsets.only(bottom: 8.0),
             child: Text(
-              'Active Todos',
+              l10n(context).activeTodos,
               style: Theme.of(context).textTheme.headline6,
             ),
           ),

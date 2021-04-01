@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:todo_provider/common/todos_app_core/todos_app_core.dart';
 import 'package:todo_provider/common/todos_repository_core/todos_repository_core.dart';
+import 'package:todo_provider/l10n/l10n.dart';
 import 'package:todo_provider/models/models.dart';
 import 'package:todo_provider/sceens/add_todo/add_todo_screen.dart';
 import 'package:todo_provider/sceens/home/home_screen.dart';
@@ -23,7 +24,9 @@ class App extends StatelessWidget {
       create: (_) => TodoListModel(repository: repository)..loadTodos(),
       child: MaterialApp(
         theme: ArchSampleTheme.theme,
-        title: 'Todo Provider',
+        onGenerateTitle: (context) => l10n(context).appTitle,
+        localizationsDelegates: AppLocalizations.localizationsDelegates,
+        supportedLocales: AppLocalizations.supportedLocales,
         routes: {
           ArchSampleRoutes.home: (context) => HomeScreen(),
           ArchSampleRoutes.addTodo: (context) => AddTodoScreen(),

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:todo_provider/common/todos_app_core/todos_app_core.dart';
+import 'package:todo_provider/l10n/l10n.dart';
 import 'package:todo_provider/models/models.dart';
 
 import '../edit/edit_todo_screen.dart';
@@ -16,11 +17,11 @@ class DetailsScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Todo Details'),
+        title: Text(l10n(context).todoDetails),
         actions: <Widget>[
           IconButton(
             key: ArchSampleKeys.deleteTodoButton,
-            tooltip: 'Delete Todo',
+            tooltip: l10n(context).deleteTodo,
             icon: const Icon(Icons.delete),
             onPressed: onRemove,
           )

@@ -23,6 +23,11 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+
+  flutter_localizations:
+    sdk: flutter
+  intl: ^0.17.0
+
   # Import the provider package.
   provider: '>=5.0.0 <6.0.0'
   shared_preferences: ^2.0.5
@@ -43,3 +48,4 @@ flutter:
   # included with your application, so that you can use the icons in
   # the material Icons class.
   uses-material-design: true
+  generate: true

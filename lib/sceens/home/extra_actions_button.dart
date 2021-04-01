@@ -5,6 +5,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:todo_provider/common/todos_app_core/todos_app_core.dart';
+import 'package:todo_provider/l10n/l10n.dart';
 import 'package:todo_provider/models/models.dart';
 
 class ExtraActionsButton extends StatelessWidget {
@@ -34,13 +35,13 @@ class ExtraActionsButton extends StatelessWidget {
             key: ArchSampleKeys.toggleAll,
             value: ExtraAction.toggleAllComplete,
             child: Text(model.hasActiveTodos
-                ? 'Mark all complete'
-                : 'Mark all incomplete'),
+                ? l10n(context).markAllComplete
+                : l10n(context).markAllIncomplete),
           ),
           PopupMenuItem<ExtraAction>(
             key: ArchSampleKeys.clearCompleted,
             value: ExtraAction.clearCompleted,
-            child: Text('Clear completed'),
+            child: Text(l10n(context).clearCompleted),
           ),
         ];
       },

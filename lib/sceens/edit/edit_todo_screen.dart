@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:todo_provider/common/todos_app_core/todos_app_core.dart';
+import 'package:todo_provider/l10n/l10n.dart';
 import 'package:todo_provider/models/models.dart';
 
 class EditTodoScreen extends StatefulWidget {
@@ -40,7 +41,7 @@ class _EditTodoScreenState extends State<EditTodoScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('Edit Todo')),
+      appBar: AppBar(title: Text(l10n(context).editTodo)),
       body: Form(
         key: _formKey,
         child: Padding(
@@ -52,17 +53,19 @@ class _EditTodoScreenState extends State<EditTodoScreen> {
                 key: ArchSampleKeys.taskField,
                 style: Theme.of(context).textTheme.headline5,
                 decoration: InputDecoration(
-                  hintText: 'What needs to be done?',
+                  hintText: l10n(context).inputTodoHint,
                 ),
                 validator: (val) {
-                  return val!.trim().isEmpty ? 'Please enter some text' : null;
+                  return val!.trim().isEmpty
+                      ? l10n(context).inputTodoEmptyWarning
+                      : null;
                 },
               ),
               TextFormField(
                 controller: _noteController,
                 key: ArchSampleKeys.noteField,
                 decoration: InputDecoration(
-                  hintText: 'Additional Notes...',
+                  hintText: l10n(context).additionalNotes,
                 ),
                 maxLines: 10,
               )
@@ -72,7 +75,7 @@ class _EditTodoScreenState extends State<EditTodoScreen> {
       ),
       floatingActionButton: FloatingActionButton(
         key: ArchSampleKeys.saveTodoFab,
-        tooltip: 'Save changes',
+        tooltip: l10n(context).saveChanges,
         onPressed: () {
           if (_formKey.currentState!.validate()) {
             _formKey.currentState!.save();

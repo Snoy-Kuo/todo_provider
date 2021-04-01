@@ -43,6 +43,9 @@ TODO App using Provider to manage state.
  - [InputDecoration](https://api.flutter.dev/flutter/material/InputDecoration-class.html)
  - [TextEditingController](https://api.flutter.dev/flutter/widgets/TextEditingController-class.html)
  - [Random](https://api.flutter.dev/flutter/dart-math/Random-class.html)
+ 
+ - [Internationalizing Flutter apps](https://flutter.dev/docs/development/accessibility-and-localization/internationalization)
+ - [arb](https://localizely.com/flutter-arb/)
 
 ## Try
 

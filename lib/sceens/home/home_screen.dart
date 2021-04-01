@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart' hide Action;
 import 'package:provider/provider.dart';
 import 'package:todo_provider/common/todos_app_core/todos_app_core.dart';
+import 'package:todo_provider/l10n/l10n.dart';
 import 'package:todo_provider/models/models.dart';
 import 'package:todo_provider/sceens/home/todo_list_view.dart';
 
@@ -30,7 +31,7 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Todo Provider'),
+        title: Text(l10n(context).appTitle),
         actions: <Widget>[
           ValueListenableBuilder<_HomeScreenTab>(
             valueListenable: _tab,
@@ -44,7 +45,7 @@ class _HomeScreenState extends State<HomeScreen> {
       floatingActionButton: FloatingActionButton(
         key: ArchSampleKeys.addTodoFab,
         onPressed: () => Navigator.pushNamed(context, ArchSampleRoutes.addTodo),
-        tooltip: 'Add Todo',
+        tooltip: l10n(context).addTodo,
         child: const Icon(Icons.add),
       ),
       body: Selector<TodoListModel, bool>(
@@ -88,11 +89,11 @@ class _HomeScreenState extends State<HomeScreen> {
             items: [
               BottomNavigationBarItem(
                 icon: Icon(Icons.list, key: ArchSampleKeys.todoTab),
-                label: 'Todos',
+                label: l10n(context).todos,
               ),
               BottomNavigationBarItem(
                 icon: Icon(Icons.show_chart, key: ArchSampleKeys.statsTab),
-                label: 'Stats',
+                label: l10n(context).stats,
               ),
             ],
           );
@@ -107,13 +108,13 @@ class _HomeScreenState extends State<HomeScreen> {
         key: ArchSampleKeys.snackbar,
         duration: const Duration(seconds: 2),
         content: Text(
-          'Deleted "${todo.task}"',
+          l10n(context).deletedTodoTask(todo.task),
           maxLines: 1,
           overflow: TextOverflow.ellipsis,
         ),
         action: SnackBarAction(
           key: ArchSampleKeys.snackbarAction(todo.id),
-          label: 'Undo',
+          label: l10n(context).undo,
           onPressed: () =>
               Provider.of<TodoListModel>(context, listen: false).addTodo(todo),
         ),

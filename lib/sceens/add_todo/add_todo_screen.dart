@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:todo_provider/common/todos_app_core/todos_app_core.dart';
+import 'package:todo_provider/l10n/l10n.dart';
 import 'package:todo_provider/models/models.dart';
 
 class AddTodoScreen extends StatefulWidget {
@@ -28,7 +29,7 @@ class _AddTodoScreenState extends State<AddTodoScreen> {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text('Add Todo'),
+        title: Text(l10n(context).addTodo),
       ),
       body: Form(
         autovalidateMode: AutovalidateMode.disabled,
@@ -41,19 +42,22 @@ class _AddTodoScreenState extends State<AddTodoScreen> {
                 key: ArchSampleKeys.taskField,
                 controller: _titleEditingController,
                 decoration: InputDecoration(
-                  hintText: 'What needs to be done?',
+                  hintText: l10n(context).inputTodoHint,
                 ),
                 style: textTheme.headline5,
                 autofocus: true,
                 validator: (val) {
-                  return val!.trim().isEmpty ? 'Please enter some text' : null;
+                  return val!.trim().isEmpty
+                      ? l10n(context).inputTodoEmptyWarning
+                      : null;
                 },
               ),
               TextFormField(
                 key: ArchSampleKeys.noteField,
                 controller: _notesEditingController,
                 style: textTheme.subtitle1,
-                decoration: InputDecoration(hintText: 'Additional Notes...'),
+                decoration:
+                    InputDecoration(hintText: l10n(context).additionalNotes),
                 maxLines: 10,
               )
             ],
@@ -62,7 +66,7 @@ class _AddTodoScreenState extends State<AddTodoScreen> {
       ),
       floatingActionButton: FloatingActionButton(
         key: ArchSampleKeys.saveNewTodo,
-        tooltip: 'Add Todo',
+        tooltip: l10n(context).addTodo,
         onPressed: () {
           if (_formKey.currentState!.validate()) {
             Provider.of<TodoListModel>(context, listen: false).addTodo(Todo(
