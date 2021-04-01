@@ -9,118 +9,115 @@ import 'extra_actions_button.dart';
 import 'filter_button.dart';
 import 'stats_view.dart';
 
-class HomeScreen extends StatefulWidget {
+class HomeScreen extends StatelessWidget {
   const HomeScreen();
 
   @override
-  _HomeScreenState createState() => _HomeScreenState();
+  Widget build(BuildContext context) {
+    return ChangeNotifierProvider(
+      create: (_) => _HomeScreenTabModel(),
+      child: _homeScreen(context),
+    );
+  }
 }
 
-class _HomeScreenState extends State<HomeScreen> {
-  // Because the state of the tabs is only a concern to the HomeScreen Widget,
-  // it is stored as local state rather than in the TodoListModel.
-  final _tab = ValueNotifier(_HomeScreenTab.todos);
-
-  @override
-  void dispose() {
-    _tab.dispose();
-    super.dispose();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(l10n(context).appTitle),
-        actions: <Widget>[
-          ValueListenableBuilder<_HomeScreenTab>(
-            valueListenable: _tab,
-            builder: (_, tab, __) => FilterButton(
-              isActive: tab == _HomeScreenTab.todos,
+Widget _homeScreen(BuildContext context) {
+  return Scaffold(
+    appBar: AppBar(
+      title: Text(l10n(context).appTitle),
+      actions: <Widget>[
+        Consumer<_HomeScreenTabModel>(
+            builder: (context, model, child) => FilterButton(
+                  isActive: model.tab == _HomeScreenTab.todos,
+                )),
+        const ExtraActionsButton(),
+      ],
+    ),
+    floatingActionButton: FloatingActionButton(
+      key: ArchSampleKeys.addTodoFab,
+      onPressed: () => Navigator.pushNamed(context, ArchSampleRoutes.addTodo),
+      tooltip: l10n(context).addTodo,
+      child: const Icon(Icons.add),
+    ),
+    body: Selector<TodoListModel, bool>(
+      selector: (context, model) => model.isLoading,
+      builder: (context, isLoading, _) {
+        if (isLoading) {
+          return Center(
+            child: CircularProgressIndicator(
+              key: ArchSampleKeys.todosLoading,
             ),
-          ),
-          const ExtraActionsButton(),
-        ],
-      ),
-      floatingActionButton: FloatingActionButton(
-        key: ArchSampleKeys.addTodoFab,
-        onPressed: () => Navigator.pushNamed(context, ArchSampleRoutes.addTodo),
-        tooltip: l10n(context).addTodo,
-        child: const Icon(Icons.add),
-      ),
-      body: Selector<TodoListModel, bool>(
-        selector: (context, model) => model.isLoading,
-        builder: (context, isLoading, _) {
-          if (isLoading) {
-            return Center(
-              child: CircularProgressIndicator(
-                key: ArchSampleKeys.todosLoading,
-              ),
-            );
+          );
+        }
+
+        return Consumer<_HomeScreenTabModel>(builder: (context, model, child) {
+          switch (model.tab) {
+            case _HomeScreenTab.stats:
+              return const StatsView();
+            case _HomeScreenTab.todos:
+            default:
+              return TodoListView(
+                onRemove: (context, todo) {
+                  Provider.of<TodoListModel>(context, listen: false)
+                      .removeTodo(todo);
+                  _showUndoSnackbar(context, todo);
+                },
+              );
           }
+        });
+      },
+    ),
+    bottomNavigationBar:
+        Consumer<_HomeScreenTabModel>(builder: (context, model, child) {
+      return BottomNavigationBar(
+        key: ArchSampleKeys.tabs,
+        currentIndex: _HomeScreenTab.values.indexOf(model.tab),
+        onTap: (int index) => model.tab = _HomeScreenTab.values[index],
+        items: [
+          BottomNavigationBarItem(
+            icon: Icon(Icons.list, key: ArchSampleKeys.todoTab),
+            label: l10n(context).todos,
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.show_chart, key: ArchSampleKeys.statsTab),
+            label: l10n(context).stats,
+          ),
+        ],
+      );
+    }),
+  );
+}
 
-          return ValueListenableBuilder<_HomeScreenTab>(
-            valueListenable: _tab,
-            builder: (context, tab, _) {
-              switch (tab) {
-                case _HomeScreenTab.stats:
-                  return const StatsView();
-                case _HomeScreenTab.todos:
-                default:
-                  return TodoListView(
-                    onRemove: (context, todo) {
-                      Provider.of<TodoListModel>(context, listen: false)
-                          .removeTodo(todo);
-                      _showUndoSnackbar(context, todo);
-                    },
-                  );
-              }
-            },
-          );
-        },
+void _showUndoSnackbar(BuildContext context, Todo todo) {
+  ScaffoldMessenger.of(context).showSnackBar(
+    SnackBar(
+      key: ArchSampleKeys.snackbar,
+      duration: const Duration(seconds: 2),
+      content: Text(
+        l10n(context).deletedTodoTask(todo.task),
+        maxLines: 1,
+        overflow: TextOverflow.ellipsis,
       ),
-      bottomNavigationBar: ValueListenableBuilder<_HomeScreenTab>(
-        valueListenable: _tab,
-        builder: (context, tab, _) {
-          return BottomNavigationBar(
-            key: ArchSampleKeys.tabs,
-            currentIndex: _HomeScreenTab.values.indexOf(tab),
-            onTap: (int index) => _tab.value = _HomeScreenTab.values[index],
-            items: [
-              BottomNavigationBarItem(
-                icon: Icon(Icons.list, key: ArchSampleKeys.todoTab),
-                label: l10n(context).todos,
-              ),
-              BottomNavigationBarItem(
-                icon: Icon(Icons.show_chart, key: ArchSampleKeys.statsTab),
-                label: l10n(context).stats,
-              ),
-            ],
-          );
-        },
+      action: SnackBarAction(
+        key: ArchSampleKeys.snackbarAction(todo.id),
+        label: l10n(context).undo,
+        onPressed: () =>
+            Provider.of<TodoListModel>(context, listen: false).addTodo(todo),
       ),
-    );
-  }
-
-  void _showUndoSnackbar(BuildContext context, Todo todo) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        key: ArchSampleKeys.snackbar,
-        duration: const Duration(seconds: 2),
-        content: Text(
-          l10n(context).deletedTodoTask(todo.task),
-          maxLines: 1,
-          overflow: TextOverflow.ellipsis,
-        ),
-        action: SnackBarAction(
-          key: ArchSampleKeys.snackbarAction(todo.id),
-          label: l10n(context).undo,
-          onPressed: () =>
-              Provider.of<TodoListModel>(context, listen: false).addTodo(todo),
-        ),
-      ),
-    );
-  }
+    ),
+  );
 }
 
 enum _HomeScreenTab { todos, stats }
+
+class _HomeScreenTabModel extends ChangeNotifier {
+  _HomeScreenTab _tab = _HomeScreenTab.todos;
+
+  _HomeScreenTab get tab => _tab;
+
+  set tab(_HomeScreenTab newTab) {
+    _tab = newTab;
+
+    notifyListeners();
+  }
+}
