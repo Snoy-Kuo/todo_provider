@@ -4,7 +4,7 @@ import 'package:todo_provider/common/todos_app_core/todos_app_core.dart';
 import 'package:todo_provider/l10n/l10n.dart';
 import 'package:todo_provider/models/models.dart';
 
-class EditTodoScreen extends StatefulWidget {
+class EditTodoScreen extends StatelessWidget {
   final void Function(String task, String note) onEdit;
   final String id;
 
@@ -14,56 +14,45 @@ class EditTodoScreen extends StatefulWidget {
   }) : super(key: ArchSampleKeys.editTodoScreen);
 
   @override
-  _EditTodoScreenState createState() => _EditTodoScreenState();
-}
-
-class _EditTodoScreenState extends State<EditTodoScreen> {
-  final _formKey = GlobalKey<FormState>();
-  late TextEditingController _taskController;
-  late TextEditingController _noteController;
-
-  @override
-  void initState() {
-    final todo =
-        Provider.of<TodoListModel>(context, listen: false).todoById(widget.id);
-    _taskController = TextEditingController(text: todo?.task);
-    _noteController = TextEditingController(text: todo?.note);
-    super.initState();
-  }
-
-  @override
-  void dispose() {
-    _taskController.dispose();
-    _noteController.dispose();
-    super.dispose();
-  }
-
-  @override
   Widget build(BuildContext context) {
+    final todo =
+        Provider.of<TodoListModel>(context, listen: false).todoById(id);
+    return ChangeNotifierProvider(
+      create: (_) => _EditTodoScreenModel(task: todo!.task, note: todo.note),
+      child: _editTodoScreen(context, id: id, onEditFun: this.onEdit),
+    );
+  }
+
+  Widget _editTodoScreen(BuildContext context,
+      {required String id,
+      required void Function(String task, String note) onEditFun}) {
+    String? todoTaskErrorText;
+
     return Scaffold(
       appBar: AppBar(title: Text(l10n(context).editTodo)),
-      body: Form(
-        key: _formKey,
-        child: Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: Column(
+      body: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Consumer<_EditTodoScreenModel>(
+          builder: (context, model, child) => Column(
             children: <Widget>[
               TextFormField(
-                controller: _taskController,
                 key: ArchSampleKeys.taskField,
                 style: Theme.of(context).textTheme.headline5,
-                decoration: InputDecoration(
-                  hintText: l10n(context).inputTodoHint,
-                ),
-                validator: (val) {
-                  return val!.trim().isEmpty
+                initialValue: model.task,
+                onChanged: (val) {
+                  model.todoTask = val;
+                  todoTaskErrorText = val.trim().isEmpty
                       ? l10n(context).inputTodoEmptyWarning
                       : null;
                 },
+                decoration: InputDecoration(
+                    hintText: l10n(context).inputTodoHint,
+                    errorText: todoTaskErrorText),
               ),
               TextFormField(
-                controller: _noteController,
                 key: ArchSampleKeys.noteField,
+                initialValue: model.note,
+                onChanged: (val) => {model.todoNote = val},
                 decoration: InputDecoration(
                   hintText: l10n(context).additionalNotes,
                 ),
@@ -73,17 +62,35 @@ class _EditTodoScreenState extends State<EditTodoScreen> {
           ),
         ),
       ),
-      floatingActionButton: FloatingActionButton(
-        key: ArchSampleKeys.saveTodoFab,
-        tooltip: l10n(context).saveChanges,
-        onPressed: () {
-          if (_formKey.currentState!.validate()) {
-            _formKey.currentState!.save();
-            widget.onEdit(_taskController.text, _noteController.text);
-          }
-        },
-        child: const Icon(Icons.check),
+      floatingActionButton: Consumer<_EditTodoScreenModel>(
+        builder: (context, model, child) => FloatingActionButton(
+          key: ArchSampleKeys.saveTodoFab,
+          tooltip: l10n(context).saveChanges,
+          onPressed: () {
+            if (todoTaskErrorText == null) {
+              onEditFun(model.task, model.note);
+            }
+          },
+          child: const Icon(Icons.check),
+        ),
       ),
     );
+  }
+}
+
+class _EditTodoScreenModel extends ChangeNotifier {
+  String task;
+  String note;
+
+  _EditTodoScreenModel({required this.task, required this.note});
+
+  set todoTask(String newTodoTask) {
+    task = newTodoTask;
+    notifyListeners();
+  }
+
+  set todoNote(String newTodoNote) {
+    note = newTodoNote;
+    notifyListeners();
   }
 }
