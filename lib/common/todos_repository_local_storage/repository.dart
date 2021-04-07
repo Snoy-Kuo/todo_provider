@@ -4,10 +4,10 @@
 
 import 'dart:async';
 import 'dart:core';
-import 'dart:developer';
 
 import 'package:todo_provider/common/todos_repository_core/todos_repository_core.dart';
 
+import '../logger.dart';
 import 'web_client.dart';
 
 /// A class that glues together our local file storage and web client. It has a
@@ -28,7 +28,7 @@ class LocalStorageRepository implements TodosRepository {
     try {
       return await localStorage.loadTodos();
     } catch (e) {
-      log('e=$e');
+      logger.e('e=$e');
       final todos = await webClient.loadTodos();
 
       await localStorage.saveTodos(todos);

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart' hide Action;
 import 'package:provider/provider.dart';
+import 'package:todo_provider/common/logger.dart';
 import 'package:todo_provider/common/todos_app_core/todos_app_core.dart';
 import 'package:todo_provider/l10n/l10n.dart';
 import 'package:todo_provider/models/models.dart';
@@ -42,6 +43,7 @@ Widget _homeScreen(BuildContext context) {
     body: Selector<TodoListModel, bool>(
       selector: (context, model) => model.isLoading,
       builder: (context, isLoading, _) {
+        logger.d('isLoading=$isLoading');
         if (isLoading) {
           return Center(
             child: CircularProgressIndicator(

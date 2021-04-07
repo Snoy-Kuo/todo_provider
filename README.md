@@ -46,6 +46,10 @@ TODO App using Provider to manage state.
  
  - [Internationalizing Flutter apps](https://flutter.dev/docs/development/accessibility-and-localization/internationalization)
  - [arb](https://localizely.com/flutter-arb/)
+ - [logger](https://pub.dev/packages/logger)
+ - [tester.pumpWidget](https://api.flutter.dev/flutter/flutter_test/WidgetTester/pumpWidget.html)
+ - [tester.pump](https://api.flutter.dev/flutter/flutter_test/WidgetTester/pump.html)
+ - [tester.pumpAndSettle()](https://api.flutter.dev/flutter/flutter_test/WidgetController/pumpAndSettle.html)
 
 ## Try
 
