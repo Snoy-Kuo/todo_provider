@@ -13,10 +13,9 @@ import 'package:todo_provider/sceens/home/home_screen.dart';
 
 class App extends StatelessWidget {
   final TodosRepository repository;
+  final bool isTest;
 
-  App({
-    required this.repository,
-  });
+  App({required this.repository, this.isTest = false});
 
   @override
   Widget build(BuildContext context) {
@@ -26,7 +25,8 @@ class App extends StatelessWidget {
         theme: ArchSampleTheme.theme,
         onGenerateTitle: (context) => l10n(context).appTitle,
         localizationsDelegates: AppLocalizations.localizationsDelegates,
-        supportedLocales: AppLocalizations.supportedLocales,
+        supportedLocales:
+            isTest ? [Locale('en')] : AppLocalizations.supportedLocales,
         routes: {
           ArchSampleRoutes.home: (context) => HomeScreen(),
           ArchSampleRoutes.addTodo: (context) => AddTodoScreen(),

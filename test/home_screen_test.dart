@@ -3,11 +3,10 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:provider/provider.dart';
 import 'package:todo_provider/common/todos_app_core/todos_app_core.dart';
 import 'package:todo_provider/common/todos_repository_core/todos_repository_core.dart';
+import 'package:todo_provider/common/todos_repository_core/mock_repository.dart';
 import 'package:todo_provider/l10n/l10n.dart';
 import 'package:todo_provider/models/models.dart';
 import 'package:todo_provider/sceens/home/home_screen.dart';
-
-import 'mock_repository.dart';
 
 /// Demonstrates how to test Widgets in combination with a ChangeNotifier
 void main() {
@@ -101,7 +100,7 @@ class _TestWidget extends StatelessWidget {
     return ChangeNotifierProvider<TodoListModel>(
       create: (_) {
         return TodoListModel(
-            repository: repository ?? MockRepository(todos ?? _defaultTodos))
+            repository: repository ?? MockRepository(todos ?? MockRepository.defaultTodos))
           ..loadTodos();
       },
       child: MaterialApp(
@@ -109,14 +108,6 @@ class _TestWidget extends StatelessWidget {
         home: child ?? const HomeScreen(),
       ),
     );
-  }
-
-  static List<Todo> get _defaultTodos {
-    return [
-      Todo('T1', id: '1', note: 'N1'),
-      Todo('T2', id: '2'),
-      Todo('T3', id: '3', complete: true),
-    ];
   }
 }
 

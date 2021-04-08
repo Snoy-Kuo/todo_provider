@@ -1,8 +1,8 @@
 // Provides a Mock repository that can be used for testing in place of the real
 // thing.
-import 'package:todo_provider/common/todos_repository_core/todo_entity.dart';
-import 'package:todo_provider/common/todos_repository_core/todos_repository.dart';
-import 'package:todo_provider/models/todo_model.dart';
+
+import 'package:todo_provider/models/models.dart';
+import 'todos_repository_core.dart';
 
 class MockRepository extends TodosRepository {
   List<TodoEntity> entities;
@@ -21,5 +21,13 @@ class MockRepository extends TodosRepository {
   Future saveTodos(List<TodoEntity> todos) async {
     saveCount++;
     entities = todos;
+  }
+
+  static List<Todo> get defaultTodos {
+    return [
+      Todo('T1', id: '1', note: 'N1'),
+      Todo('T2', id: '2'),
+      Todo('T3', id: '3', complete: true),
+    ];
   }
 }

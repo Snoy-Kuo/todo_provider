@@ -3,10 +3,9 @@
 // in the LICENSE file.
 
 import 'package:flutter_test/flutter_test.dart';
+import 'package:todo_provider/common/todos_repository_core/mock_repository.dart';
 import 'package:todo_provider/models/todo_list_model.dart';
 import 'package:todo_provider/models/todo_model.dart';
-
-import 'mock_repository.dart';
 
 void main() {
   group('TodoListModel', () {
